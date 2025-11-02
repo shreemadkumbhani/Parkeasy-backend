@@ -18,11 +18,11 @@ router.get("/", async (req, res) => {
   }
 
   try {
-    // Allow optional radius in meters (default 2000m)
+    // Allow optional radius in meters but cap strictly to 2000m
     let radius = parseInt(req.query.radius, 10);
     if (Number.isNaN(radius) || radius <= 0) radius = 2000;
-    // Cap radius to a sensible maximum to protect performance
-    radius = Math.min(radius, 10000);
+    // Enforce hard cap at 2000m (2km)
+    radius = Math.min(radius, 2000);
     // Use $near query to find lots sorted by distance
     const lots = await ParkingLot.find({
       location: {
